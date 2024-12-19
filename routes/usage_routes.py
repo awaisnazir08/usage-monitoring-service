@@ -10,9 +10,10 @@ usage_service = UsageTrackingService()
 @AuthService.token_required
 def check_upload_bandwidth(user):
     data = request.json
+    # print(data)
     file_size = data.get('file_size', 0)
-    
-    result = usage_service.check_upload_bandwidth(user['_id'], file_size)
+    # print(user)
+    result = usage_service.check_upload_bandwidth(user['email'], file_size)
     
     return jsonify(result), 200 if result['allowed'] else 400
 
@@ -20,10 +21,10 @@ def check_upload_bandwidth(user):
 @AuthService.token_required
 def log_upload(user):
     data = request.json
-    file_size = data.get('file_size', 0)
     file_name = data.get('file_name', '')
+    file_size = data.get('file_size', 0)
     
-    usage_record = usage_service.log_upload(user['_id'], file_name, file_size)
+    usage_record = usage_service.log_upload(user['email'], file_name, file_size)
     
     return jsonify(usage_record), 200 if usage_record else 400
 
@@ -31,14 +32,14 @@ def log_upload(user):
 @AuthService.token_required
 def check_alert_required_or_not(user):
     
-    alert_logs = usage_service.check_usage_alerts(user['_id'])
+    alert_logs = usage_service.check_usage_alerts(user['email'])
     
     return jsonify(alert_logs), 200 if alert_logs else 400
 
 @usage_bp.route('/api/usage/daily-summary', methods=['GET'])
 @AuthService.token_required
 def get_daily_summary(user):
-    usage = usage_service.get_daily_usage(user['_id'])
+    usage = usage_service.get_daily_usage(user['email'])
     return jsonify(usage), 200
 
 @usage_bp.route('/api/usage/log-deletion', methods=['POST'])
@@ -48,10 +49,10 @@ def log_deletion(user):
     Log video file deletion and update usage statistics
     """
     data = request.json
-    file_size = data.get('file_size', 0)
     file_name = data.get('file_name', "")
+    file_size = data.get('file_size', 0)
     
-    deletion_record = usage_service.log_deletion(user['_id'], file_size, file_name)
+    deletion_record = usage_service.log_deletion(user['email'], file_name, file_size)
     
     return jsonify(deletion_record), 200 if deletion_record else 400
 
@@ -61,5 +62,5 @@ def reset_daily_usage(user):
     """
     Manually reset daily usage (typically for admin or system use)
     """
-    result = usage_service.reset_daily_usage(user['_id'])
+    result = usage_service.reset_daily_usage(user['email'])
     return jsonify(result), 200
