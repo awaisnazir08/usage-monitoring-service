@@ -9,9 +9,7 @@ usage_service = UsageTrackingService()
 @AuthService.token_required
 def check_upload_bandwidth(user):
     data = request.json
-    # print(data)
     file_size = data.get('file_size', 0)
-    # print(user)
     result = usage_service.check_upload_bandwidth(user['email'], file_size)
     
     return jsonify(result), 200 if result['allowed'] else 400
