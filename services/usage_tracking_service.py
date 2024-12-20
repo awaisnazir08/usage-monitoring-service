@@ -35,9 +35,9 @@ class UsageTrackingService:
         return {
             'total_bandwidth_used': total_used,
             'bandwidth_total_limit': limit,
-            'bandwith_percentage_used': (total_used / limit) * 100,
-            'bandwidth_alerts': {
-                'bandwidth_approaching_limit': total_used >= (limit * 0.8),
+            'bandwidth_percentage_used': (total_used / limit) * 100,
+            'bandwidth_checks': {
+                'bandwidth_limit_approaching': total_used >= (limit * 0.8),
                 'bandwidth_limit_exceeded': total_used >= limit
             }
         }
@@ -67,11 +67,11 @@ class UsageTrackingService:
         return {
             'email': usage_record.get('email'),
             'date': usage_record.get('date'),
-            'total_limit': limit,
-            'total_used': total_used,
-            'total_deleted': total_deleted,
-            'remaining': limit - total_used,
-            'percentage_consumed': (total_used / limit) * 100,
+            'total_bandwidth_limit': limit,
+            'total_data_bandwidth_used': total_used,
+            'total_volume_deleted': total_deleted,
+            'remaining_bandwidth': limit - total_used,
+            'bandwidth_percentage_consumed': (total_used / limit) * 100,
             'upload_count': usage_record.get('upload_count', 0),
             'deletion_count': usage_record.get('deletion_count', 0),
             'uploads': usage_record.get('uploads', []),
