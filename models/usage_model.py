@@ -172,3 +172,21 @@ class UsageModel:
         if usage_record and '_id' in usage_record:
             del usage_record['_id']
         return usage_record or {}
+    
+    def get_all_usage_records(self, email):
+        """
+        Retrieve all usage records for a user, sorted by date
+        """
+        usage_records = self.usage_collection.find({
+            'email': email
+        }).sort('date', -1)  # Sort by date ascending
+        
+        if not usage_records:
+            return {}
+        records = []
+        for record in usage_records:
+            if '_id' in record:
+                del record['_id']
+            records.append(record)
+        
+        return records

@@ -39,6 +39,12 @@ def get_daily_summary(user):
     usage = usage_service.get_daily_usage(user['email'])
     return jsonify(usage), 200
 
+@usage_bp.route('/api/usage/complete-summary', methods=['GET'])
+@AuthService.token_required
+def get_complete_summary(user):
+    usage = usage_service.get_complete_usage_stats(user['email'])
+    return jsonify(usage), 200
+
 @usage_bp.route('/api/usage/log-deletion', methods=['POST'])
 @AuthService.token_required
 def log_deletion(user):
