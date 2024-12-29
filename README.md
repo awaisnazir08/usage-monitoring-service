@@ -166,6 +166,7 @@ This microservice enables user monitoring through bandwidth tracking, upload log
 }
 ```
 
+
 ---
 
 ## Setup and Configuration
@@ -201,4 +202,134 @@ This microservice enables user monitoring through bandwidth tracking, upload log
 
 ---
 
+
+
+# Endpoint: Get Complete Usage Summary
+
+This API endpoint provides a detailed summary of a user's usage statistics, including daily records and overall summary statistics. 
+
+---
+
+## **Endpoint**
+### **GET** `/api/usage/complete-summary`
+
+---
+
+## **Authorization**
+This endpoint requires authentication. You must include a valid token in the request header to access it.
+
+- **Decorator Used**: `@AuthService.token_required`
+
+---
+
+## **Request**
+### **Headers**
+| Key           | Value           |
+|---------------|-----------------|
+| Authorization | Bearer `<token>` |
+
+### **Parameters**
+None
+
+---
+
+## **Response**
+### **Status Code**
+- **200 OK**: The request was successful, and usage statistics are returned.
+
+### **Response Body**
+The response is a JSON object containing:
+1. **Summary Statistics**:
+   - **Date Range**:
+     - `start`: The start date of the records.
+     - `end`: The end date of the records.
+     - `total_days`: Total days in the date range.
+     - `days_with_activity`: Number of days with recorded activity.
+     - `days_without_activity`: Number of days without activity.
+   - **Bandwidth Totals**:
+     - `total_bandwidth_provided`: Total bandwidth allocated based on the date range.
+     - `total_data_bandwidth_used`: Total data bandwidth used.
+     - `total_volume_deleted`: Total volume of data deleted.
+     - `overall_bandwidth_percentage_consumed`: Percentage of the total bandwidth consumed.
+   - **Daily Averages**:
+     - `average_daily_usage`: Average data bandwidth used per day.
+     - `average_daily_deletions`: Average data deleted per day.
+     - `average_daily_upload_count`: Average number of uploads per day.
+     - `average_daily_deletion_count`: Average number of deletions per day.
+     - `average_usage_on_active_days`: Average data bandwidth used on days with activity.
+     - `average_deletions_on_active_days`: Average data deleted on days with activity.
+   - **Activity Totals**:
+     - `total_upload_count`: Total number of uploads.
+     - `total_deletion_count`: Total number of deletions.
+
+2. **Daily Records**:
+   A list of daily usage records, each containing:
+   - `email`: User's email address.
+   - `date`: Date of the record.
+   - `total_bandwidth_limit`: Daily bandwidth limit.
+   - `total_data_bandwidth_used`: Bandwidth used on that day.
+   - `total_volume_deleted`: Volume of data deleted on that day.
+   - `remaining_bandwidth`: Remaining bandwidth for the day.
+   - `bandwidth_percentage_consumed`: Percentage of the daily bandwidth used.
+   - `upload_count`: Number of uploads on that day.
+   - `deletion_count`: Number of deletions on that day.
+   - `uploads`: List of upload details.
+   - `deletions`: List of deletion details.
+
+---
+
+## **Example Response**
+
+```json
+{
+  "email": "user@example.com",
+  "summary_statistics": {
+    "date_range": {
+      "start": "2024-12-01",
+      "end": "2024-12-29",
+      "total_days": 29,
+      "days_with_activity": 15,
+      "days_without_activity": 14
+    },
+    "bandwidth_totals": {
+      "total_bandwidth_provided": 2900,
+      "total_data_bandwidth_used": 1200,
+      "total_volume_deleted": 500,
+      "overall_bandwidth_percentage_consumed": 41.38
+    },
+    "daily_averages": {
+      "average_daily_usage": 41.38,
+      "average_daily_deletions": 17.24,
+      "average_daily_upload_count": 3.45,
+      "average_daily_deletion_count": 2.07,
+      "average_usage_on_active_days": 80,
+      "average_deletions_on_active_days": 33.33
+    },
+    "activity_totals": {
+      "total_upload_count": 100,
+      "total_deletion_count": 60
+    }
+  },
+  "daily_records": [
+    {
+      "email": "user@example.com",
+      "date": "2024-12-29",
+      "total_bandwidth_limit": 100,
+      "total_data_bandwidth_used": 50,
+      "total_volume_deleted": 20,
+      "remaining_bandwidth": 50,
+      "bandwidth_percentage_consumed": 50,
+      "upload_count": 5,
+      "deletion_count": 2,
+      "uploads": [
+        {"file_name": "example1.txt", "size": 10},
+        {"file_name": "example2.txt", "size": 15}
+      ],
+      "deletions": [
+        {"file_name": "example3.txt", "size": 5}
+      ]
+    }
+  ]
+}
+```
 
